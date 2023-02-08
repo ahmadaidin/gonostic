@@ -1,0 +1,11 @@
+basePath: /
+host: localhost:8000
+info:
+  contact:
+    email: ahmadaidin08.aa@gmail.com
+    name: Ahmad Aidin
+  description: This is a server for EchoScratch API.
+  title: EchoScratch Service Documentation
+  version: "1.0"
+paths: {}
+swagger: "2.0"

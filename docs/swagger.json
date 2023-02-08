@@ -1,0 +1,15 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is a server for EchoScratch API.",
+        "title": "EchoScratch Service Documentation",
+        "contact": {
+            "name": "Ahmad Aidin",
+            "email": "ahmadaidin08.aa@gmail.com"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:8000",
+    "basePath": "/",
+    "paths": {}
+}

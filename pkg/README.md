@@ -1,0 +1,2 @@
+# `/pkg`
+Pada direktori ini, Anda dapat memasukkan pustaka yang dapat diakses oleh aplikasi eksternal. Proyek lain dapat mengimpor pustaka ini untuk dapat bekerja. Sehingga, jika tidak perlu, jangan buat pustaka di direktori ini. Gunakan `/internal/pkg` untuk meletakkan pustaka yang hanya dapat diakses oleh proyek ini.
