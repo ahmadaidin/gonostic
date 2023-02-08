@@ -5,5 +5,9 @@ type Search struct {
 }
 
 type Sort struct {
-	Sort string `json:"sort" query:"sort"`
+	Sort []string `json:"-"`
+}
+
+func (s Sort) UnmarshalParam(param string) error {
+	return nil
 }

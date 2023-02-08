@@ -11,6 +11,7 @@ import (
 
 	"github.com/ahmadaidin/echoscratch/config"
 	"github.com/ahmadaidin/echoscratch/controller/http/book"
+	"github.com/ahmadaidin/echoscratch/pkg/binder"
 	"github.com/labstack/echo/v4" // we use echo version 4 here
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/gommon/log"
@@ -70,6 +71,8 @@ func NewHttpController() httpController {
 		modifier:  modifiers.New(),
 		autoMod:   true,
 	}
+
+	e.Binder = &binder.CustomBinder{}
 
 	// start main cotroller
 	return &httpCtr{e}

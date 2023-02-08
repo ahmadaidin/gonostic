@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/ahmadaidin/echoscratch/domain/model"
+	"github.com/ahmadaidin/echoscratch/pkg/errcode"
 	"github.com/labstack/echo/v4"
 )
 
@@ -18,7 +19,8 @@ func NewBookController(echo *echo.Echo) *bookController {
 func (ctr *bookController) FindAll(c echo.Context) (err error) {
 	filter := &model.BookFilter{}
 	if err = c.Bind(filter); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, "bad filter", err.Error())
+		c.Echo().Logger.Error(err)
+		return echo.NewHTTPError(http.StatusBadRequest, errcode.ErrBadParam.Error())
 	}
 	return
 }
