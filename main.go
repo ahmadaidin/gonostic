@@ -40,5 +40,5 @@ func setupCloseHandler() {
 func main() {
 	setupCloseHandler()
 	config.ReadConfig(".env")
-	http.NewHttpController().Start("", config.Configuration().Port)
+	http.NewHttpHandler().Listen(config.Configuration().Port)
 }

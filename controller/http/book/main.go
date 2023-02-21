@@ -4,16 +4,21 @@ import (
 	"net/http"
 
 	"github.com/ahmadaidin/echoscratch/domain/model"
+	"github.com/ahmadaidin/echoscratch/domain/repository"
 	"github.com/ahmadaidin/echoscratch/pkg/errcode"
 	"github.com/labstack/echo/v4"
 )
 
 type bookController struct {
-	echo *echo.Echo
+	bookRepo repository.BookRepository
 }
 
-func NewBookController(echo *echo.Echo) *bookController {
-	return &bookController{echo}
+func NewBookController(
+	bookRepo repository.BookRepository,
+) *bookController {
+	return &bookController{
+		bookRepo: bookRepo,
+	}
 }
 
 func (ctr *bookController) FindAll(c echo.Context) (err error) {
@@ -22,11 +27,6 @@ func (ctr *bookController) FindAll(c echo.Context) (err error) {
 		c.Echo().Logger.Error(err)
 		return echo.NewHTTPError(http.StatusBadRequest, errcode.ErrBadParam.Error())
 	}
+	_, err = ctr.bookRepo.FindAll()
 	return
-}
-
-// Start start the services
-func (ctr *bookController) Routes(path string) {
-	r := ctr.echo.Group(path)
-	r.GET("", ctr.FindAll)
 }
