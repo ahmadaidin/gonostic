@@ -8,8 +8,6 @@ import (
 
 	"github.com/ahmadaidin/echoscratch/config"
 	"github.com/ahmadaidin/echoscratch/controller/http/book"
-	"github.com/ahmadaidin/echoscratch/domain/repository/mongorepo"
-	"github.com/ahmadaidin/echoscratch/infra"
 	"github.com/ahmadaidin/echoscratch/pkg/binder"
 	"github.com/labstack/echo/v4" // we use echo version 4 here
 	"github.com/labstack/echo/v4/middleware"
@@ -33,10 +31,14 @@ type HttpHandler interface {
 }
 
 type httpHandler struct {
-	echo *echo.Echo
+	runner   *echo.Echo
+	router   *echo.Echo
+	bookCtrl *book.BookController
 }
 
-func NewHttpHandler() HttpHandler {
+func NewHttpHandler(
+	bookCtrl *book.BookController,
+) HttpHandler {
 	e := echo.New()
 
 	// Middleware
@@ -59,23 +61,16 @@ func NewHttpHandler() HttpHandler {
 	e.Binder = &binder.CustomBinder{}
 
 	// start main cotroller
-	return &httpHandler{e}
+	return &httpHandler{
+		router:   e,
+		runner:   e,
+		bookCtrl: bookCtrl,
+	}
 }
 
 func (handler *httpHandler) Listen(port int) {
-	router := handler.echo
-	runner := handler.echo
+	rg := handler.router.Group("book")
+	rg.GET("", handler.bookCtrl.FindAll)
 
-	mongoConnection := infra.NewMongoConnection("")
-
-	bookRepo := mongorepo.NewBookRepository(mongoConnection)
-
-	bookCtrl := book.NewBookController(
-		bookRepo,
-	)
-
-	rg := router.Group("book")
-	rg.GET("", bookCtrl.FindAll)
-
-	runner.Start(fmt.Sprintf(":%d", port))
+	handler.runner.Start(fmt.Sprintf(":%d", port))
 }

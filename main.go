@@ -8,6 +8,9 @@ import (
 
 	"github.com/ahmadaidin/echoscratch/config"
 	"github.com/ahmadaidin/echoscratch/controller/http"
+	"github.com/ahmadaidin/echoscratch/controller/http/book"
+	"github.com/ahmadaidin/echoscratch/domain/repository/mongorepo"
+	"github.com/ahmadaidin/echoscratch/infra"
 )
 
 func beforeTerminate() {
@@ -39,6 +42,23 @@ func setupCloseHandler() {
 // @BasePath /
 func main() {
 	setupCloseHandler()
+
+	// load configuration
 	config.ReadConfig(".env")
-	http.NewHttpHandler().Listen(config.Configuration().Port)
+	cfg := config.Configuration()
+
+	// initiate all infrastructures
+	mongoDb := infra.NewMongoConnection(cfg.DatabaseURI)
+
+	// initiate all repostiroies
+	bookRepo := mongorepo.NewBookRepository(mongoDb)
+
+	// initiate all services
+
+	// initiate all controllers
+	bookCtrl := book.NewBookController(
+		bookRepo,
+	)
+
+	http.NewHttpHandler(bookCtrl).Listen(config.Configuration().Port)
 }

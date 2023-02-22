@@ -9,24 +9,26 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-type bookController struct {
+type BookController struct {
 	bookRepo repository.BookRepository
 }
 
 func NewBookController(
 	bookRepo repository.BookRepository,
-) *bookController {
-	return &bookController{
+) *BookController {
+	return &BookController{
 		bookRepo: bookRepo,
 	}
 }
 
-func (ctr *bookController) FindAll(c echo.Context) (err error) {
+func (ctr *BookController) FindAll(c echo.Context) (err error) {
 	filter := &model.BookFilter{}
 	if err = c.Bind(filter); err != nil {
-		c.Echo().Logger.Error(err)
 		return echo.NewHTTPError(http.StatusBadRequest, errcode.ErrBadParam.Error())
 	}
-	_, err = ctr.bookRepo.FindAll()
-	return
+	books, err := ctr.bookRepo.FindAll()
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+	return c.JSON(http.StatusOK, books)
 }

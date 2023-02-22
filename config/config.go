@@ -16,6 +16,7 @@ var (
 type _Configuration struct {
 	Environment string `env:"ENV" env-default:"prod" env-upd:"true"`
 	Port        int    `env:"PORT" env-default:"8000"`
+	DatabaseURI string `env:"DATABASE_URI" env-upd:"true" env-required:"true"`
 }
 
 // ReadConfig reads the configuration file and sets the envFile variable
