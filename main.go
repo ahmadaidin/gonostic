@@ -44,11 +44,11 @@ func main() {
 	setupCloseHandler()
 
 	// load configuration
-	config.ReadConfig(".env")
-	cfg := config.Configuration()
+	config.Read(".env")
+	cfg := config.GetConfig()
 
 	// initiate all infrastructures
-	mongoDb := infra.NewMongoConnection(cfg.DatabaseURI)
+	mongoDb := infra.NewMongoConnection(cfg.DatabaseURI, cfg.DatabaseConnectionTimeout)
 
 	// initiate all repostiroies
 	bookRepo := mongorepo.NewBookRepository(mongoDb)
@@ -60,5 +60,5 @@ func main() {
 		bookRepo,
 	)
 
-	http.NewHttpHandler(bookCtrl).Listen(config.Configuration().Port)
+	http.NewEchoHttpHandler(bookCtrl).Listen(config.GetConfig().Port)
 }

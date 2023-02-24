@@ -16,9 +16,9 @@ var (
 	store *mongo.Database
 )
 
-func NewMongoConnection(databaseURI string) *mongo.Database {
+func NewMongoConnection(databaseURI string, connTimeout time.Duration) *mongo.Database {
 	once.Do(func() {
-		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		ctx, cancel := context.WithTimeout(context.Background(), connTimeout)
 		defer cancel()
 
 		cs, err := connstring.Parse(databaseURI)

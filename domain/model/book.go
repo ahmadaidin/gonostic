@@ -1,10 +1,9 @@
 package model
 
-// type BookSort struct {
-// 	string `json:"author" query:"author"`
-// }
+import "time"
 
 type BookFilter struct {
-	Sort Sort `json:"-" `
-	Search
+	Sort            []string  `json:"sort" query:"sort"`
+	Search          string    `json:"search" query:"search"`
+	PublishedBefore time.Time `json:"published_before" query:"published_before"`
 }

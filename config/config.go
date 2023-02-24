@@ -3,25 +3,27 @@ package config
 import (
 	"log"
 	"sync"
+	"time"
 
 	"github.com/ilyakaznacheev/cleanenv"
 )
 
 var (
-	cfg     _Configuration
+	cfg     configuration
 	cfgOnce sync.Once
 	envFile *string
 )
 
-type _Configuration struct {
-	Environment string `env:"ENV" env-default:"prod" env-upd:"true"`
-	Port        int    `env:"PORT" env-default:"8000"`
-	DatabaseURI string `env:"DATABASE_URI" env-upd:"true" env-required:"true"`
+type configuration struct {
+	Environment               string        `env:"ENV" env-default:"prod" env-upd:"true"`
+	Port                      int           `env:"PORT" env-default:"8000"`
+	DatabaseURI               string        `env:"DATABASE_URI" env-upd:"true" env-required:"true"`
+	DatabaseConnectionTimeout time.Duration `env:"DATABASE_CONNECTION_TIMEOUT" env-default:"10s" env-upd:"true"`
 }
 
-// ReadConfig reads the configuration file and sets the envFile variable
+// Read reads the configuration file and sets the envFile variable
 // If the file is not found, it will try to read the file from enviroment variable
-func ReadConfig(file string) {
+func Read(file string) {
 	cfgOnce.Do(func() {
 		envFile = &file
 		log.Printf(`Reading config file: "%s"`, *envFile)
@@ -43,7 +45,7 @@ func ReadConfig(file string) {
 	})
 }
 
-func Configuration() _Configuration {
+func GetConfig() configuration {
 	if envFile == nil {
 		log.Panic(`configuration file is not set. Call ReadConfig("path_to_file") first. path_to_file could be an empty string`)
 	}

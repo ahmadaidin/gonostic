@@ -8,7 +8,8 @@ import (
 
 	"github.com/ahmadaidin/echoscratch/config"
 	"github.com/ahmadaidin/echoscratch/controller/http/book"
-	"github.com/ahmadaidin/echoscratch/pkg/binder"
+	"github.com/ahmadaidin/echoscratch/core"
+	"github.com/ahmadaidin/echoscratch/core/adapter"
 	"github.com/labstack/echo/v4" // we use echo version 4 here
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/gommon/log"
@@ -31,12 +32,12 @@ type HttpHandler interface {
 }
 
 type httpHandler struct {
-	runner   *echo.Echo
-	router   *echo.Echo
+	runner   core.Runner
+	router   core.Router
 	bookCtrl *book.BookController
 }
 
-func NewHttpHandler(
+func NewEchoHttpHandler(
 	bookCtrl *book.BookController,
 ) HttpHandler {
 	e := echo.New()
@@ -47,7 +48,7 @@ func NewHttpHandler(
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
-	if config.Configuration().Environment == "prod" {
+	if config.GetConfig().Environment == "prod" {
 		e.Logger.SetLevel(log.INFO)
 	} else {
 		e.Logger.SetLevel(log.DEBUG)
@@ -57,20 +58,19 @@ func NewHttpHandler(
 	e.Validator = &customValidator{
 		validator: validator.New(),
 	}
-
-	e.Binder = &binder.CustomBinder{}
+	wrappedEcho := adapter.NewEcho(e)
 
 	// start main cotroller
 	return &httpHandler{
-		router:   e,
+		router:   wrappedEcho,
 		runner:   e,
 		bookCtrl: bookCtrl,
 	}
 }
 
 func (handler *httpHandler) Listen(port int) {
-	rg := handler.router.Group("book")
-	rg.GET("", handler.bookCtrl.FindAll)
+	bookRouter := handler.router.Group("book")
+	bookRouter.GET("", handler.bookCtrl.FindAll)
 
 	handler.runner.Start(fmt.Sprintf(":%d", port))
 }
