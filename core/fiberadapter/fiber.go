@@ -20,12 +20,13 @@ type (
 	}
 )
 
-func NewFiber(e *fiber.App) *Fiber {
-	return &Fiber{e}
+func NewFiber() *Fiber {
+	app := fiber.New()
+	return &Fiber{app}
 }
 
-func (e *Fiber) Group(prefix string, h ...fiber.Handler) IRouter {
-	r := e.App.Group(prefix, h...)
+func (app *Fiber) Group(prefix string, h ...fiber.Handler) IRouter {
+	r := app.App.Group(prefix, h...)
 	return &Router{Router: r}
 }
 

@@ -17,7 +17,8 @@ type (
 	}
 )
 
-func NewEcho(e *echo.Echo) *Echo {
+func NewEcho() *Echo {
+	e := echo.New()
 	return &Echo{e}
 }
 

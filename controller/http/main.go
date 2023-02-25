@@ -4,14 +4,12 @@ import (
 	"fmt"
 
 	"github.com/go-playground/validator/v10"
-	"github.com/gofiber/fiber/v2"
 	echoSwagger "github.com/swaggo/echo-swagger"
 
 	"github.com/ahmadaidin/echoscratch/config"
 	"github.com/ahmadaidin/echoscratch/controller/http/book"
 	"github.com/ahmadaidin/echoscratch/core/echoadapter"
-	"github.com/ahmadaidin/echoscratch/core/fiberadapter"
-	"github.com/labstack/echo/v4" // we use echo version 4 here
+	"github.com/ahmadaidin/echoscratch/core/fiberadapter" // we use echo version 4 here
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/gommon/log"
 
@@ -47,7 +45,7 @@ func (handler *echoHandler) Listen(port int) {
 func NewEchoHttpHandler(
 	bookCtrl *book.BookController,
 ) HttpHandler {
-	e := echo.New()
+	e := echoadapter.NewEcho()
 
 	if config.GetConfig().Environment == "prod" {
 		e.Logger.SetLevel(log.INFO)
@@ -64,10 +62,8 @@ func NewEchoHttpHandler(
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
-	wrappedEcho := echoadapter.NewEcho(e)
-
 	return &echoHandler{
-		echo:     wrappedEcho,
+		echo:     e,
 		bookCtrl: bookCtrl,
 	}
 }
@@ -87,10 +83,10 @@ func (handler *fiberHandler) Listen(port int) {
 func NewFiberHttpHandler(
 	bookCtrl *book.BookController,
 ) HttpHandler {
-	app := fiber.New()
+	app := fiberadapter.NewFiber()
 
 	return &fiberHandler{
-		app:      fiberadapter.NewFiber(app),
+		app:      app,
 		bookCtrl: bookCtrl,
 	}
 }
