@@ -47,7 +47,7 @@ func NewEchoHttpHandler(
 ) HttpHandler {
 	e := echoadapter.NewEcho()
 
-	if config.GetConfig().Environment == "prod" {
+	if config.GetConfig().IsProdEnv() {
 		e.Logger.SetLevel(log.INFO)
 	} else {
 		e.Logger.SetLevel(log.DEBUG)

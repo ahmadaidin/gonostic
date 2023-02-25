@@ -21,6 +21,10 @@ type configuration struct {
 	DatabaseConnectionTimeout time.Duration `env:"DATABASE_CONNECTION_TIMEOUT" env-default:"10s" env-upd:"true"`
 }
 
+func (cfg configuration) IsProdEnv() bool {
+	return cfg.Environment == "prod"
+}
+
 // Read reads the configuration file and sets the envFile variable
 // If the file is not found, it will try to read the file from enviroment variable
 func Read(file string) {
