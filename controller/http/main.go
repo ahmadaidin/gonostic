@@ -4,12 +4,13 @@ import (
 	"fmt"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/gofiber/fiber/v2"
 	echoSwagger "github.com/swaggo/echo-swagger"
 
 	"github.com/ahmadaidin/echoscratch/config"
 	"github.com/ahmadaidin/echoscratch/controller/http/book"
-	"github.com/ahmadaidin/echoscratch/core"
-	"github.com/ahmadaidin/echoscratch/core/adapter"
+	"github.com/ahmadaidin/echoscratch/core/echoadapter"
+	"github.com/ahmadaidin/echoscratch/core/fiberadapter"
 	"github.com/labstack/echo/v4" // we use echo version 4 here
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/gommon/log"
@@ -31,10 +32,16 @@ type HttpHandler interface {
 	Listen(port int)
 }
 
-type httpHandler struct {
-	runner   core.Runner
-	router   core.Router
+type echoHandler struct {
+	echo     *echoadapter.Echo
 	bookCtrl *book.BookController
+}
+
+func (handler *echoHandler) Listen(port int) {
+	bookRouter := handler.echo.Group("book")
+	bookRouter.GET("", handler.bookCtrl.FindAll)
+
+	handler.echo.Start(fmt.Sprintf(":%d", port))
 }
 
 func NewEchoHttpHandler(
@@ -58,19 +65,34 @@ func NewEchoHttpHandler(
 	e.Validator = &customValidator{
 		validator: validator.New(),
 	}
-	wrappedEcho := adapter.NewEcho(e)
+	wrappedEcho := echoadapter.NewEcho(e)
 
 	// start main cotroller
-	return &httpHandler{
-		router:   wrappedEcho,
-		runner:   e,
+	return &echoHandler{
+		echo:     wrappedEcho,
 		bookCtrl: bookCtrl,
 	}
 }
 
-func (handler *httpHandler) Listen(port int) {
-	bookRouter := handler.router.Group("book")
-	bookRouter.GET("", handler.bookCtrl.FindAll)
+type fiberHandler struct {
+	app      *fiberadapter.Fiber
+	bookCtrl *book.BookController
+}
 
-	handler.runner.Start(fmt.Sprintf(":%d", port))
+func (handler *fiberHandler) Listen(port int) {
+	bookRouter := handler.app.Group("book")
+	bookRouter.Get("", handler.bookCtrl.FindAll)
+
+	handler.app.Listen(fmt.Sprintf(":%d", port))
+}
+
+func NewFiberHttpHandler(
+	bookCtrl *book.BookController,
+) HttpHandler {
+	app := fiber.New()
+
+	return &fiberHandler{
+		app:      fiberadapter.NewFiber(app),
+		bookCtrl: bookCtrl,
+	}
 }

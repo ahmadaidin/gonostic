@@ -60,5 +60,5 @@ func main() {
 		bookRepo,
 	)
 
-	http.NewEchoHttpHandler(bookCtrl).Listen(config.GetConfig().Port)
+	http.NewFiberHttpHandler(bookCtrl).Listen(config.GetConfig().Port)
 }

@@ -1,21 +1,22 @@
-package core
+package echoadapter
 
 import (
+	"github.com/ahmadaidin/echoscratch/core"
 	"github.com/labstack/echo/v4"
 )
 
-type Router interface {
-	Group(prefix string, m ...echo.MiddlewareFunc) (g Group)
+type IRouter interface {
+	Group(prefix string, m ...echo.MiddlewareFunc) (g IGroup)
 }
 
-type Group interface {
+type IGroup interface {
 	Use(middleware ...echo.MiddlewareFunc)
 
 	// CONNECT(path string, h HandlerFunc, m ...echo.MiddlewareFunc)
 
 	// DELETE(path string, h HandlerFunc, m ...echo.MiddlewareFunc)
 
-	GET(path string, h HandlerFunc, m ...echo.MiddlewareFunc)
+	GET(path string, h core.HandlerFunc, m ...echo.MiddlewareFunc)
 
 	// HEAD(path string, h HandlerFunc, m ...echo.MiddlewareFunc)
 
