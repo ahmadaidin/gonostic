@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/ahmadaidin/echoscratch/core"
-	"github.com/ahmadaidin/echoscratch/core/echoadapter"
 	"github.com/ahmadaidin/echoscratch/domain/model"
 	"github.com/ahmadaidin/echoscratch/domain/repository"
 	"github.com/ahmadaidin/echoscratch/pkg"
@@ -32,11 +31,11 @@ func NewBookController(
 func (ctr *BookController) FindAll(c core.Context) (err error) {
 	filter := &model.BookFilter{}
 	if err = c.QueryParser(filter); err != nil {
-		return echoadapter.NewHTTPError(http.StatusBadRequest, pkg.NewError(pkg.ErrBadParam, err, pkg.MsgErrBadParam))
+		return c.HttpError(http.StatusBadRequest, pkg.NewError(pkg.ErrBadParam, err, pkg.MsgErrBadParam))
 	}
 	books, err := ctr.bookRepo.FindAll()
 	if err != nil {
-		return echoadapter.NewHTTPError(http.StatusInternalServerError, pkg.NewError(pkg.ErrUnexpected, err))
+		return c.HttpError(http.StatusInternalServerError, pkg.NewError(pkg.ErrUnexpected, err))
 	}
 	return c.SendJson(http.StatusOK, books)
 }

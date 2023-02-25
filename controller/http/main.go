@@ -49,12 +49,6 @@ func NewEchoHttpHandler(
 ) HttpHandler {
 	e := echo.New()
 
-	// Middleware
-
-	e.Use(middleware.RequestID())
-	e.Use(middleware.Logger())
-	e.Use(middleware.Recover())
-
 	if config.GetConfig().Environment == "prod" {
 		e.Logger.SetLevel(log.INFO)
 	} else {
@@ -65,9 +59,13 @@ func NewEchoHttpHandler(
 	e.Validator = &customValidator{
 		validator: validator.New(),
 	}
+
+	e.Use(middleware.RequestID())
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
+
 	wrappedEcho := echoadapter.NewEcho(e)
 
-	// start main cotroller
 	return &echoHandler{
 		echo:     wrappedEcho,
 		bookCtrl: bookCtrl,

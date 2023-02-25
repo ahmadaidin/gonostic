@@ -1,6 +1,7 @@
 package fiberadapter
 
 import (
+	"encoding/json"
 	"errors"
 
 	"github.com/ahmadaidin/echoscratch/core"
@@ -124,5 +125,31 @@ func (ctx *Context) Bind(i interface{}) error {
 }
 
 func (ctx *Context) SendJson(code int, i interface{}) error {
-	return ctx.Ctx.JSON(i)
+	return ctx.Ctx.Status(code).JSON(i)
+}
+
+func (context *Context) HttpError(code int, messages ...any) error {
+	if len(messages) > 0 {
+		printedMsg := messages[0]
+		_, err := json.Marshal(printedMsg)
+		if err == nil {
+			context.Ctx.Set(fiber.HeaderContentType, fiber.MIMEApplicationJSON)
+			return context.Ctx.Status(code).JSON(printedMsg)
+		} else {
+			msg, ok := printedMsg.(error)
+			if ok {
+				return fiber.NewError(code, msg.Error())
+			} else {
+				msg, ok := printedMsg.(string)
+				if ok {
+					return fiber.NewError(code, msg)
+				} else {
+					msg = "unable to convert error message"
+					return fiber.NewError(code, msg)
+				}
+			}
+		}
+	} else {
+		return fiber.NewError(code)
+	}
 }

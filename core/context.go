@@ -154,5 +154,7 @@ type (
 		// // with `Echo#AcquireContext()` and `Echo#ReleaseContext()`.
 		// // See `Echo#ServeHTTP()`
 		// Reset(r *http.Request, w http.ResponseWriter)
+
+		HttpError(code int, messages ...any) error
 	}
 )

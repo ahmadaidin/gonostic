@@ -143,3 +143,7 @@ func (context *Context) SendJson(code int, i interface{}) error {
 func (context *Context) QueryParser(i interface{}) error {
 	return context.Context.Bind(i)
 }
+
+func (context *Context) HttpError(code int, messages ...any) error {
+	return echo.NewHTTPError(code, messages)
+}
