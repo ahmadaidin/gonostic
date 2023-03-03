@@ -1,4 +1,4 @@
-package pkg
+package errors
 
 const (
 	MsgErrBadParam = "please check your request query parameter"

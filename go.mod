@@ -8,6 +8,7 @@ require (
 	github.com/ilyakaznacheev/cleanenv v1.4.2
 	github.com/labstack/echo/v4 v4.10.2
 	github.com/pkg/errors v0.9.1
+	github.com/rs/zerolog v1.29.0
 	github.com/swaggo/echo-swagger v1.3.5
 	github.com/swaggo/swag v1.8.10
 	go.mongodb.org/mongo-driver v1.11.2

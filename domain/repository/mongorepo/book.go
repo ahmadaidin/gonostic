@@ -6,6 +6,7 @@ import (
 	"github.com/ahmadaidin/gonostic/domain/entity"
 	"github.com/ahmadaidin/gonostic/domain/model/book"
 	"github.com/ahmadaidin/gonostic/domain/repository"
+	"github.com/ahmadaidin/gonostic/pkg/errors"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -19,6 +20,10 @@ func NewBookRepository(store *mongo.Database) repository.BookRepository {
 	}
 }
 
+func createError() error {
+	return errors.WithCallerInfo(errors.New("1st err"))
+}
+
 func (r *bookRepository) FindAll(ctx context.Context, opt ...book.FindOptions) (books []entity.Book, err error) {
 	books = []entity.Book{
 		{
@@ -29,5 +34,6 @@ The story began as a sequel to Tolkien's 1937 fantasy novel The Hobbit, but even
 Written in stages between 1937 and 1949, The Lord of the Rings is one of the best-selling novels ever written, with over 150 million copies sold.`,
 		},
 	}
-	return
+	err = errors.Join(errors.WithCallerInfo(errors.New("2nd err")), createError())
+	return books, err
 }

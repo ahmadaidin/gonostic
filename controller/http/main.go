@@ -36,7 +36,7 @@ type echoHandler struct {
 }
 
 func (handler *echoHandler) Listen(port int) {
-	bookctrlRouter := handler.echo.Group("bookctrl")
+	bookctrlRouter := handler.echo.Group("book")
 	bookctrlRouter.GET("", handler.bookctrlCtrl.FindAll)
 
 	handler.echo.Start(fmt.Sprintf(":%d", port))
@@ -74,7 +74,7 @@ type fiberHandler struct {
 }
 
 func (handler *fiberHandler) Listen(port int) {
-	bookctrlRouter := handler.app.Group("bookctrl")
+	bookctrlRouter := handler.app.Group("book")
 	bookctrlRouter.Get("", handler.bookctrlCtrl.FindAll)
 
 	handler.app.Listen(fmt.Sprintf(":%d", port))

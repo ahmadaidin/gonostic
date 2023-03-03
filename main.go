@@ -8,7 +8,7 @@ import (
 
 	"github.com/ahmadaidin/gonostic/config"
 	"github.com/ahmadaidin/gonostic/controller/http"
-	"github.com/ahmadaidin/gonostic/controller/http/book"
+	"github.com/ahmadaidin/gonostic/controller/http/bookctrl"
 	"github.com/ahmadaidin/gonostic/domain/repository/mongorepo"
 	"github.com/ahmadaidin/gonostic/infra"
 )
@@ -56,7 +56,7 @@ func main() {
 	// initiate all services
 
 	// initiate all controllers
-	bookCtrl := book.NewBookController(
+	bookCtrl := bookctrl.NewBookController(
 		bookRepo,
 	)
 
