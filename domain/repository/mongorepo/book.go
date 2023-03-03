@@ -1,7 +1,10 @@
 package mongorepo
 
 import (
+	"context"
+
 	"github.com/ahmadaidin/gonostic/domain/entity"
+	"github.com/ahmadaidin/gonostic/domain/model/book"
 	"github.com/ahmadaidin/gonostic/domain/repository"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -16,7 +19,7 @@ func NewBookRepository(store *mongo.Database) repository.BookRepository {
 	}
 }
 
-func (r *bookRepository) FindAll() (books []entity.Book, err error) {
+func (r *bookRepository) FindAll(ctx context.Context, opt ...book.FindOptions) (books []entity.Book, err error) {
 	books = []entity.Book{
 		{
 			ID:    "1",

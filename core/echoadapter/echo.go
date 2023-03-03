@@ -1,6 +1,8 @@
 package echoadapter
 
 import (
+	"context"
+
 	"github.com/ahmadaidin/gonostic/core"
 	"github.com/labstack/echo/v4"
 )
@@ -147,4 +149,8 @@ func (context *Context) QueryParser(i interface{}) error {
 
 func (context *Context) HttpError(code int, messages ...any) error {
 	return echo.NewHTTPError(code, messages)
+}
+
+func (context *Context) RequestContext() context.Context {
+	return context.Context.Request().Context()
 }

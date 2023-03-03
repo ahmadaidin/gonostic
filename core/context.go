@@ -1,9 +1,12 @@
 package core
 
+import "context"
+
 type (
 	// Context represents the context of the current HTTP request. It holds request and
 	// response objects, path, path parameters, data and registered handler.
 	Context interface {
+		RequestContext() context.Context
 		// Request returns `*http.Request`.
 		// Request() *http.Request
 

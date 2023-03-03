@@ -1,6 +1,7 @@
 package fiberadapter
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 
@@ -153,4 +154,8 @@ func (context *Context) HttpError(code int, messages ...any) error {
 	} else {
 		return fiber.NewError(code)
 	}
+}
+
+func (context *Context) RequestContext() context.Context {
+	return context.Ctx.Context()
 }

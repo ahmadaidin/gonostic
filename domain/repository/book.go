@@ -1,7 +1,12 @@
 package repository
 
-import "github.com/ahmadaidin/gonostic/domain/entity"
+import (
+	"context"
+
+	"github.com/ahmadaidin/gonostic/domain/entity"
+	"github.com/ahmadaidin/gonostic/domain/model/book"
+)
 
 type BookRepository interface {
-	FindAll() (books []entity.Book, err error)
+	FindAll(ctx context.Context, opt ...book.FindOptions) (books []entity.Book, err error)
 }

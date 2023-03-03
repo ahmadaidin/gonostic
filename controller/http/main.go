@@ -7,7 +7,7 @@ import (
 	echoSwagger "github.com/swaggo/echo-swagger"
 
 	"github.com/ahmadaidin/gonostic/config"
-	"github.com/ahmadaidin/gonostic/controller/http/book"
+	"github.com/ahmadaidin/gonostic/controller/http/bookctrl"
 	"github.com/ahmadaidin/gonostic/core/echoadapter"
 	"github.com/ahmadaidin/gonostic/core/fiberadapter" // we use echo version 4 here
 	"github.com/labstack/echo/v4/middleware"
@@ -31,19 +31,19 @@ type HttpHandler interface {
 }
 
 type echoHandler struct {
-	echo     *echoadapter.Echo
-	bookCtrl *book.BookController
+	echo         *echoadapter.Echo
+	bookctrlCtrl *bookctrl.BookController
 }
 
 func (handler *echoHandler) Listen(port int) {
-	bookRouter := handler.echo.Group("book")
-	bookRouter.GET("", handler.bookCtrl.FindAll)
+	bookctrlRouter := handler.echo.Group("bookctrl")
+	bookctrlRouter.GET("", handler.bookctrlCtrl.FindAll)
 
 	handler.echo.Start(fmt.Sprintf(":%d", port))
 }
 
 func NewEchoHttpHandler(
-	bookCtrl *book.BookController,
+	bookctrlCtrl *bookctrl.BookController,
 ) HttpHandler {
 	e := echoadapter.NewEcho()
 
@@ -63,30 +63,30 @@ func NewEchoHttpHandler(
 	e.Use(middleware.Recover())
 
 	return &echoHandler{
-		echo:     e,
-		bookCtrl: bookCtrl,
+		echo:         e,
+		bookctrlCtrl: bookctrlCtrl,
 	}
 }
 
 type fiberHandler struct {
-	app      *fiberadapter.Fiber
-	bookCtrl *book.BookController
+	app          *fiberadapter.Fiber
+	bookctrlCtrl *bookctrl.BookController
 }
 
 func (handler *fiberHandler) Listen(port int) {
-	bookRouter := handler.app.Group("book")
-	bookRouter.Get("", handler.bookCtrl.FindAll)
+	bookctrlRouter := handler.app.Group("bookctrl")
+	bookctrlRouter.Get("", handler.bookctrlCtrl.FindAll)
 
 	handler.app.Listen(fmt.Sprintf(":%d", port))
 }
 
 func NewFiberHttpHandler(
-	bookCtrl *book.BookController,
+	bookctrlCtrl *bookctrl.BookController,
 ) HttpHandler {
 	app := fiberadapter.NewFiber()
 
 	return &fiberHandler{
-		app:      app,
-		bookCtrl: bookCtrl,
+		app:          app,
+		bookctrlCtrl: bookctrlCtrl,
 	}
 }
