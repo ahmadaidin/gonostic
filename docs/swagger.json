@@ -1,8 +1,8 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "This is a server for EchoScratch API.",
-        "title": "EchoScratch Service Documentation",
+        "description": "This is a server for gonostic API.",
+        "title": "gonostic Service Documentation",
         "contact": {
             "name": "Ahmad Aidin",
             "email": "ahmadaidin08.aa@gmail.com"

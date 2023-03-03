@@ -15,4 +15,4 @@ RUN apk --no-cache add ca-certificates
 RUN ln -sf /proc/1/fd/1 /tmp/application.log
 COPY --from=builder /go/bin/app /app
 ENTRYPOINT /app
-LABEL Name=echoscratch Version=0.1.0
+LABEL Name=gonostic Version=0.1.0

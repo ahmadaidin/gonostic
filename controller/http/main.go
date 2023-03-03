@@ -6,14 +6,14 @@ import (
 	"github.com/go-playground/validator/v10"
 	echoSwagger "github.com/swaggo/echo-swagger"
 
-	"github.com/ahmadaidin/echoscratch/config"
-	"github.com/ahmadaidin/echoscratch/controller/http/book"
-	"github.com/ahmadaidin/echoscratch/core/echoadapter"
-	"github.com/ahmadaidin/echoscratch/core/fiberadapter" // we use echo version 4 here
+	"github.com/ahmadaidin/gonostic/config"
+	"github.com/ahmadaidin/gonostic/controller/http/book"
+	"github.com/ahmadaidin/gonostic/core/echoadapter"
+	"github.com/ahmadaidin/gonostic/core/fiberadapter" // we use echo version 4 here
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/gommon/log"
 
-	_ "github.com/ahmadaidin/echoscratch/docs"
+	_ "github.com/ahmadaidin/gonostic/docs"
 )
 
 // customValidator to validate input request

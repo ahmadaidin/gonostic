@@ -6,11 +6,11 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/ahmadaidin/echoscratch/config"
-	"github.com/ahmadaidin/echoscratch/controller/http"
-	"github.com/ahmadaidin/echoscratch/controller/http/book"
-	"github.com/ahmadaidin/echoscratch/domain/repository/mongorepo"
-	"github.com/ahmadaidin/echoscratch/infra"
+	"github.com/ahmadaidin/gonostic/config"
+	"github.com/ahmadaidin/gonostic/controller/http"
+	"github.com/ahmadaidin/gonostic/controller/http/book"
+	"github.com/ahmadaidin/gonostic/domain/repository/mongorepo"
+	"github.com/ahmadaidin/gonostic/infra"
 )
 
 func beforeTerminate() {
@@ -31,9 +31,9 @@ func setupCloseHandler() {
 	}()
 }
 
-// @title EchoScratch Service Documentation
+// @title gonostic Service Documentation
 // @version 1.0
-// @description This is a server for EchoScratch API.
+// @description This is a server for gonostic API.
 
 // @contact.name Ahmad Aidin
 // @contact.email ahmadaidin08.aa@gmail.com

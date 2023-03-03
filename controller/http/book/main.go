@@ -3,10 +3,10 @@ package book
 import (
 	"net/http"
 
-	"github.com/ahmadaidin/echoscratch/core"
-	"github.com/ahmadaidin/echoscratch/domain/model"
-	"github.com/ahmadaidin/echoscratch/domain/repository"
-	"github.com/ahmadaidin/echoscratch/pkg"
+	"github.com/ahmadaidin/gonostic/core"
+	"github.com/ahmadaidin/gonostic/domain/model"
+	"github.com/ahmadaidin/gonostic/domain/repository"
+	"github.com/ahmadaidin/gonostic/pkg"
 )
 
 type BookController struct {

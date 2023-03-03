@@ -1,7 +1,7 @@
 package echoadapter
 
 import (
-	"github.com/ahmadaidin/echoscratch/core"
+	"github.com/ahmadaidin/gonostic/core"
 	"github.com/labstack/echo/v4"
 )
 

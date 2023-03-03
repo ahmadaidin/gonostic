@@ -1,7 +1,7 @@
 package fiberadapter
 
 import (
-	"github.com/ahmadaidin/echoscratch/core"
+	"github.com/ahmadaidin/gonostic/core"
 )
 
 type IRouter interface {

@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 
-	"github.com/ahmadaidin/echoscratch/core"
+	"github.com/ahmadaidin/gonostic/core"
 	"github.com/gofiber/fiber/v2"
 )
 

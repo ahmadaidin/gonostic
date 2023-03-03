@@ -1,8 +1,8 @@
 package mongorepo
 
 import (
-	"github.com/ahmadaidin/echoscratch/domain/entity"
-	"github.com/ahmadaidin/echoscratch/domain/repository"
+	"github.com/ahmadaidin/gonostic/domain/entity"
+	"github.com/ahmadaidin/gonostic/domain/repository"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 

@@ -1,4 +1,4 @@
-module github.com/ahmadaidin/echoscratch
+module github.com/ahmadaidin/gonostic
 
 go 1.20
 

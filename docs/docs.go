@@ -84,8 +84,8 @@ var SwaggerInfo = &swag.Spec{
 	Host:             "localhost:8000",
 	BasePath:         "/",
 	Schemes:          []string{},
-	Title:            "EchoScratch Service Documentation",
-	Description:      "This is a server for EchoScratch API.",
+	Title:            "gonostic Service Documentation",
+	Description:      "This is a server for gonostic API.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 }

@@ -3,7 +3,7 @@ definitions:
   entity.Book:
     properties:
       author:
-        $ref: '#/definitions/entity.Person'
+        $ref: "#/definitions/entity.Person"
       id:
         type: string
       summary:
@@ -23,25 +23,25 @@ info:
   contact:
     email: ahmadaidin08.aa@gmail.com
     name: Ahmad Aidin
-  description: This is a server for EchoScratch API.
-  title: EchoScratch Service Documentation
+  description: This is a server for gonostic API.
+  title: gonostic Service Documentation
   version: "1.0"
 paths:
   /books:
     get:
       consumes:
-      - application/json
+        - application/json
       description: Find all books
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
           schema:
             items:
-              $ref: '#/definitions/entity.Book'
+              $ref: "#/definitions/entity.Book"
             type: array
       summary: Find all books
       tags:
-      - Book
+        - Book
 swagger: "2.0"
