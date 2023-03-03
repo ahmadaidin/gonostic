@@ -95,7 +95,8 @@ func (err withMessage) Unwrap() error {
 }
 
 func WithCallerInfo(err error) error {
-	_, file, line, _ := runtime.Caller(1)
-	callerInfo := fmt.Sprintf("error in [%s:%d]", file, line)
+	pc, _, line, _ := runtime.Caller(1)
+	details := runtime.FuncForPC(pc)
+	callerInfo := fmt.Sprintf("error in [%s:%d]", details.Name(), line)
 	return &withMessage{err, callerInfo}
 }
