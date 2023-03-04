@@ -1,65 +1,53 @@
 package http
 
 import (
-	"context"
 	"fmt"
 
-	"github.com/go-playground/mold/v4"
-	"github.com/go-playground/mold/v4/modifiers"
 	"github.com/go-playground/validator/v10"
 	echoSwagger "github.com/swaggo/echo-swagger"
 
-	"github.com/ahmadaidin/echoscratch/config"
-	"github.com/ahmadaidin/echoscratch/controller/http/book"
-	"github.com/ahmadaidin/echoscratch/pkg/binder"
-	"github.com/labstack/echo/v4" // we use echo version 4 here
+	"github.com/ahmadaidin/gonostic/config"
+	"github.com/ahmadaidin/gonostic/controller/http/bookctrl"
+	"github.com/ahmadaidin/gonostic/core/echoadapter"
+	"github.com/ahmadaidin/gonostic/core/fiberadapter" // we use echo version 4 here
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/gommon/log"
 
-	_ "github.com/ahmadaidin/echoscratch/docs"
+	_ "github.com/ahmadaidin/gonostic/docs"
 )
 
 // customValidator to validate input request
 type customValidator struct {
 	validator *validator.Validate
-	modifier  *mold.Transformer
-	autoMod   bool
 }
 
 // validate using custom validator
 func (cv customValidator) Validate(i interface{}) error {
-	if cv.autoMod {
-		if err := cv.Modify(i); err != nil {
-			return err
-		}
-	}
 	return cv.validator.Struct(i)
 }
 
-// Modify to modify/set struct field value according
-// to modifier tag. Param `data` should be a pointer.
-func (cv customValidator) Modify(data interface{}) error {
-	return cv.modifier.Struct(context.Background(), data)
+type HttpHandler interface {
+	Listen(port int)
 }
 
-type httpController interface {
-	Start(host string, port int)
+type echoHandler struct {
+	echo         *echoadapter.Echo
+	bookctrlCtrl *bookctrl.BookController
 }
 
-type httpCtr struct {
-	echo *echo.Echo
+func (handler *echoHandler) Listen(port int) {
+	bookctrlRouter := handler.echo.Group("book")
+	bookctrlRouter.GET("", handler.bookctrlCtrl.FindAll)
+
+	handler.echo.Start(fmt.Sprintf(":%d", port))
 }
 
-func NewHttpController() httpController {
-	e := echo.New()
+func NewEchoHttpHandler(
+	bookctrlCtrl *bookctrl.BookController,
+) HttpHandler {
+	e := echoadapter.NewEcho()
 
-	// Middleware
-
-	e.Use(middleware.RequestID())
-	e.Use(middleware.Logger())
-	e.Use(middleware.Recover())
-
-	if config.Configuration().Environment == "prod" {
+	if config.GetConfig().IsProdEnv() {
 		e.Logger.SetLevel(log.INFO)
 	} else {
 		e.Logger.SetLevel(log.DEBUG)
@@ -68,18 +56,37 @@ func NewHttpController() httpController {
 
 	e.Validator = &customValidator{
 		validator: validator.New(),
-		modifier:  modifiers.New(),
-		autoMod:   true,
 	}
 
-	e.Binder = &binder.CustomBinder{}
+	e.Use(middleware.RequestID())
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
 
-	// start main cotroller
-	return &httpCtr{e}
+	return &echoHandler{
+		echo:         e,
+		bookctrlCtrl: bookctrlCtrl,
+	}
 }
 
-// register cotrollers
-func (ctr *httpCtr) Start(host string, port int) {
-	book.NewBookController(ctr.echo).Routes("book")
-	ctr.echo.Logger.Fatal(ctr.echo.Start(fmt.Sprintf("%s:%d", host, port)))
+type fiberHandler struct {
+	app          *fiberadapter.Fiber
+	bookctrlCtrl *bookctrl.BookController
+}
+
+func (handler *fiberHandler) Listen(port int) {
+	bookctrlRouter := handler.app.Group("book")
+	bookctrlRouter.Get("", handler.bookctrlCtrl.FindAll)
+
+	handler.app.Listen(fmt.Sprintf(":%d", port))
+}
+
+func NewFiberHttpHandler(
+	bookctrlCtrl *bookctrl.BookController,
+) HttpHandler {
+	app := fiberadapter.NewFiber()
+
+	return &fiberHandler{
+		app:          app,
+		bookctrlCtrl: bookctrlCtrl,
+	}
 }

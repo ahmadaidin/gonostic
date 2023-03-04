@@ -1,8 +1,8 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "This is a server for EchoScratch API.",
-        "title": "EchoScratch Service Documentation",
+        "description": "This is a server for gonostic API.",
+        "title": "gonostic Service Documentation",
         "contact": {
             "name": "Ahmad Aidin",
             "email": "ahmadaidin08.aa@gmail.com"
@@ -11,5 +11,62 @@
     },
     "host": "localhost:8000",
     "basePath": "/",
-    "paths": {}
+    "paths": {
+        "/books": {
+            "get": {
+                "description": "Find all books",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Book"
+                ],
+                "summary": "Find all books",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/entity.Book"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "entity.Book": {
+            "type": "object",
+            "properties": {
+                "author": {
+                    "$ref": "#/definitions/entity.Person"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "summary": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "entity.Person": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        }
+    }
 }
