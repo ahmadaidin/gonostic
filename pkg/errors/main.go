@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"runtime"
+	"strings"
 )
 
 // Copyright 2022 The Go Authors. All rights reserved.
@@ -82,6 +83,10 @@ type withMessage struct {
 	msg string
 }
 
+func (err withMessage) GetMessage() string {
+	return err.msg
+}
+
 func WithMessage(err error, msg string) error {
 	return &withMessage{err, msg}
 }
@@ -95,8 +100,50 @@ func (err withMessage) Unwrap() error {
 }
 
 func WithCallerInfo(err error) error {
-	pc, _, line, _ := runtime.Caller(1)
+	if err == nil {
+		return nil
+	}
+	actualErr := getActualError(err)
+	msg := getMessage(err)
+	pc, file, line, _ := runtime.Caller(1)
 	details := runtime.FuncForPC(pc)
-	callerInfo := fmt.Sprintf("error in [%s:%d]", details.Name(), line)
-	return &withMessage{err, callerInfo}
+	callerInfo := fmt.Sprintf("error in %s [%s:%d]", details.Name(), file, line)
+	if msg != "" {
+		msg = strings.Join([]string{callerInfo, msg}, "\n")
+	} else {
+		msg = callerInfo
+	}
+	return &withMessage{actualErr, msg}
+}
+
+func getActualError(err error) (actualErr error) {
+	actualErr = Unwrap(err)
+	if actualErr == nil {
+		actualErr = err
+	}
+	return
+}
+
+func getMessage(err error) (message string) {
+	e, ok := err.(interface {
+		GetMessage() string
+	})
+	if ok {
+		message = e.GetMessage()
+	}
+	return
+}
+
+func WrapWithError(err error, err2 error) error {
+	if err == nil || err2 == nil {
+		return nil
+	}
+	actualErr := getActualError(err)
+	msg := getMessage(err)
+	if msg != "" {
+		msg = strings.Join([]string{msg, err2.Error()}, "\n")
+	} else {
+		msg = err2.Error()
+	}
+	return &withMessage{actualErr, msg}
 }

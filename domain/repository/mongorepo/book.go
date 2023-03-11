@@ -34,6 +34,6 @@ The story began as a sequel to Tolkien's 1937 fantasy novel The Hobbit, but even
 Written in stages between 1937 and 1949, The Lord of the Rings is one of the best-selling novels ever written, with over 150 million copies sold.`,
 		},
 	}
-	err = errors.Join(errors.WithCallerInfo(errors.New("2nd err")), createError())
-	return books, err
+	err = createError()
+	return books, errors.WrapWithError(errors.WithCallerInfo(errors.New("2nd err")), err)
 }

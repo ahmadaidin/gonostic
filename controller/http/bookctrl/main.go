@@ -37,9 +37,9 @@ func (ctr *BookController) FindAll(c core.Context) (err error) {
 	}
 	books, err := ctr.bookRepo.FindAll(ctx, opt)
 	if err != nil {
-		err = errors.Join(errors.WithCallerInfo(errors.New("3rd err")), err)
+		err = errors.WrapWithError(errors.WithCallerInfo(errors.New("3rd err")), err)
 		fmt.Println(err)
-		return c.HttpError(http.StatusInternalServerError, errors.NewError(errors.ErrUnexpected, err, "something bad happened"))
+		return c.HttpError(http.StatusInternalServerError, errors.NewError(errors.ErrUnexpected, err))
 	}
 	return c.SendJson(http.StatusOK, books)
 }
